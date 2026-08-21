@@ -71,7 +71,7 @@ The UI does not fetch `mock-data.json` directly. `dataService.ts`, `authService.
 | Notification polling | `GET https://jsonplaceholder.typicode.com/posts?_limit=5` |
 | Initial app data | `GET /mock-data.json` |
 
-The development Vite server proxies `/api/dummyjson` to `https://dummyjson.com`. A deployed static site must provide an equivalent same-origin proxy and set `VITE_AUTH_API_URL=/api/dummyjson/auth`.
+The development Vite server proxies `/api/dummyjson` to `https://dummyjson.com`. The included `vercel.json` provides the equivalent production proxy and SPA fallback for Vercel. Set `VITE_AUTH_API_URL=/api/dummyjson/auth` in the deployment environment.
 
 ## Validation
 

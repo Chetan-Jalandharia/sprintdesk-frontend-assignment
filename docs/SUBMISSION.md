@@ -36,19 +36,28 @@ Review `git status` before pushing to ensure no secrets or unrelated files are i
 
 ## 3. Deploy the Application
 
-Deploy the Vite application to a static host such as Vercel, Netlify, or Cloudflare Pages. The deployment must also provide a same-origin proxy for:
+The repository includes `vercel.json` for a Vercel deployment. It provides the required same-origin authentication proxy and SPA fallback. Vercel is the recommended deployment path for this repository.
 
-```text
-/api/dummyjson/auth/* -> https://dummyjson.com/auth/*
-```
-
-Configure the frontend environment variable on the host:
+1. Import the public GitHub repository into Vercel.
+2. Keep the framework preset as `Vite`.
+3. Use `npm run build` as the build command and `dist` as the output directory.
+4. Add this environment variable:
 
 ```env
 VITE_AUTH_API_URL=/api/dummyjson/auth
 ```
 
+5. Deploy and test the public URL in an incognito window.
+
+The deployment must provide a same-origin proxy for:
+
+```text
+/api/dummyjson/auth/* -> https://dummyjson.com/auth/*
+```
+
 Do not point production browser code directly at DummyJSON if the host does not provide the required CORS behavior. After deployment, test login, refresh, logout, and protected routes from the public URL.
+
+For Netlify or Cloudflare Pages, create an equivalent rewrite/serverless function before deploying. The Vite `server.proxy` configuration only applies to local development.
 
 ## 4. Record the Demo
 
