@@ -41,7 +41,7 @@ function TaskDrawer({ task, onClose, users }: { task: Task; onClose: () => void;
 }
 
 export function BoardPage() {
-  const { data, isPending, isError } = useQuery({ queryKey: ['mock-data'], queryFn: getMockData })
+  const { data, isPending, isError, error } = useQuery({ queryKey: ['mock-data'], queryFn: getMockData })
   const tasks = useBoardStore((state) => state.tasks)
   const setInitialData = useBoardStore((state) => state.setInitialData)
   const moveTask = useBoardStore((state) => state.moveTask)
@@ -55,7 +55,7 @@ export function BoardPage() {
   const sprintTasks = useMemo(() => tasks.filter((task) => task.sprintId === currentSprint?.id), [tasks, currentSprint?.id])
   const activeTask = tasks.find((task) => task.id === activeTaskId)
   if (isPending) return <div className="full-screen-state">Loading board...</div>
-  if (isError || !data || !currentSprint) return <div className="state-panel">Could not load the board.</div>
+  if (isError || !data || !currentSprint) return <div className="state-panel"><strong>Could not load the board.</strong><small>{error instanceof Error ? error.message : 'The sprint data is unavailable.'}</small></div>
   function handleDragEnd(event: DragEndEvent) { const overId = event.over?.id; const dragged = tasks.find((task) => task.id === event.active.id); if (!dragged || overId === undefined) return; const destination = columns.some((column) => column.status === overId) ? overId as TaskStatus : tasks.find((task) => task.id === overId)?.status ?? dragged.status; const destinationTasks = sprintTasks.filter((task) => task.status === destination && task.id !== dragged.id); const targetIndex = typeof overId === 'number' ? Math.max(0, destinationTasks.findIndex((task) => task.id === overId)) : destinationTasks.length; moveTask(dragged.id, destination, targetIndex + 1); setActiveDrag(null) }
   return <main className="workspace board-page"><section className="page-heading"><div><p className="eyebrow">{currentSprint.name} / {currentSprint.startDate} - {currentSprint.endDate}</p><h1>Sprint board</h1><p className="page-subtitle">Drag work between columns and keep the sprint moving.</p></div><button className="primary-button board-new-task" type="button" onClick={() => setShowNewTask(true)}>+ New task</button></section><DndContext sensors={sensors} onDragStart={(event) => setActiveDrag(tasks.find((task) => task.id === event.active.id) ?? null)} onDragCancel={() => setActiveDrag(null)} onDragEnd={handleDragEnd}><div className="board-grid full-board">{columns.map((column) => <DropColumn key={column.status} status={column.status} label={column.label} tasks={sprintTasks.filter((task) => task.status === column.status).sort((a, b) => a.order - b.order)} onOpen={setActiveTask} />)}</div><DragOverlay>{activeDrag ? <article className="task-card"><h3>{activeDrag.title}</h3></article> : null}</DragOverlay></DndContext>{activeTask && <TaskDrawer key={activeTask.id} task={activeTask} users={data.users} onClose={() => setActiveTask(null)} />}{showNewTask && <NewTaskModal sprintId={currentSprint.id} users={data.users} onClose={() => setShowNewTask(false)} />}</main>
 }

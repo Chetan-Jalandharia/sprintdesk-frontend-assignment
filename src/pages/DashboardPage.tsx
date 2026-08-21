@@ -15,13 +15,13 @@ const columns: { status: TaskStatus; label: string }[] = [
 
 export function DashboardPage() {
   const [showNewTask, setShowNewTask] = useState(false)
-  const { data, isPending, isError } = useQuery({
+  const { data, isPending, isError, error } = useQuery({
     queryKey: ['mock-data'],
     queryFn: getMockData,
   })
 
   if (isPending) return <div className="state-panel">Loading your workspace...</div>
-  if (isError || !data) return <div className="state-panel">Could not load the workspace.</div>
+  if (isError || !data) return <div className="state-panel"><strong>Could not load the workspace.</strong><small>{error instanceof Error ? error.message : 'The sprint data is unavailable.'}</small></div>
 
   const currentSprint = data.sprints.at(-1)
   const sprintTasks = data.tasks.filter((task) => task.sprintId === currentSprint?.id)
