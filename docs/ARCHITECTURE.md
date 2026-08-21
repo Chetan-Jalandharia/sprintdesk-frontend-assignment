@@ -40,7 +40,7 @@ Zustand manages shared application state:
 
 ### Service layer
 
-- `dataService.ts`: central mock backend adapter
+- `dataService.ts`: central mock backend adapter with a bundled production fallback
 - `authService.ts`: DummyJSON login and refresh calls
 - `apiClient.ts`: bearer token attachment, refresh-on-401, retry, and refresh deduplication
 - `notificationService.ts`: JSONPlaceholder polling adapter

@@ -1,13 +1,14 @@
 import type { MockData, Task } from '../types'
+import bundledMockData from '../../mock-data.json'
 
 export async function getMockData(): Promise<MockData> {
-  const response = await fetch('/mock-data.json')
+  try {
+    const response = await fetch('/mock-data.json')
 
-  if (!response.ok) {
-    throw new Error('Unable to load SprintDesk data')
-  }
+    if (response.ok) return response.json() as Promise<MockData>
+  } catch {}
 
-  return response.json() as Promise<MockData>
+  return bundledMockData as MockData
 }
 
 export function sortTasks(tasks: Task[]): Task[] {

@@ -49,7 +49,7 @@ Service and data-access layer
 DummyJSON, JSONPlaceholder, and mock-data.json
 ```
 
-The UI does not fetch `mock-data.json` directly. `dataService.ts`, `authService.ts`, `apiClient.ts`, and `notificationService.ts` keep API concerns replaceable.
+The UI does not fetch `mock-data.json` directly. `dataService.ts`, `authService.ts`, `apiClient.ts`, and `notificationService.ts` keep API concerns replaceable. The data service first attempts `/mock-data.json` and falls back to the bundled provided dataset for static deployments that do not expose repository-root files.
 
 ## Implemented Features
 
